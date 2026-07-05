@@ -1,0 +1,31 @@
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: cryptoflow
+      POSTGRES_PASSWORD: cryptoflow
+      POSTGRES_DB: cryptoflow
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  airflow:
+    image: apache/airflow:2.8.1
+    depends_on:
+      - postgres
+    environment:
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://cryptoflow:cryptoflow@postgres/cryptoflow
+      AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - ./ingestion:/opt/airflow/ingestion
+      - ./dbt:/opt/airflow/dbt
+    ports:
+      - "8080:8080"
+    command: standalone
+     
+volumes:
+  pgdata:
