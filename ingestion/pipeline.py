@@ -1,5 +1,5 @@
 from ingestion.coingecko_client import fetch_candles
-from loaders import insert_candles
+from ingestion.loaders import insert_candles
 
 def run_pipeline(coin_id):
     result = fetch_candles(coin_id=coin_id)
