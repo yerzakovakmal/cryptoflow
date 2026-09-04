@@ -1,5 +1,5 @@
 #!/bin/bash
 
-cd /Users/akmalyerzakov/projects/github/cryptoflow
+cd "$(dirname "$0")" || exit
 
-./venv/bin/python ingestion/pipeline.py >> ingestion.log 2>&1
+./venv/bin/python3 -m ingestion.pipeline >> ingestion.log 2>&1
